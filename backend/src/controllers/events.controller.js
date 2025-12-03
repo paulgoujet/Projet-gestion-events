@@ -176,3 +176,87 @@ export const deleteEvent = async (req, res) => {
   }
 };
 
+export async function registerToEvent(req, res) {
+  try {
+    const eventId = req.params.id;
+    const userId = req.user.id;
+
+    const [existing] = await db.query(
+      "SELECT * FROM registrations WHERE event_id = ? AND user_id = ?",
+      [eventId, userId]
+    );
+
+    if (existing.length > 0) {
+      return res.status(400).json({ message: "Déjà inscrit à cet événement" });
+    }
+
+    await db.query(
+      "INSERT INTO registrations (event_id, user_id) VALUES (?, ?)",
+      [eventId, userId]
+    );
+    res.json({ message: "Inscription réussie" });
+  } catch (error) {
+    console.error("Erreur inscription :", error);
+    res.status(500).json({ message: "Erreur lors de l'inscription" });
+  }
+}
+
+export async function unregisterFromEvent(req, res) {
+  try {
+    const eventId = req.params.id;
+    const userId = req.user.id;
+
+    await db.query(
+      "DELETE FROM registrations WHERE event_id = ? AND user_id = ?",
+      [eventId, userId]
+    );
+
+    res.json({ message: "Désinscription réussie" });
+  } catch (error) {
+    console.error("Erreur désinscription :", error);
+    res.status(500).json({ message: "Erreur lors de la désinscription" });
+  }
+}
+
+export async function getEventRegistrations(req, res) {
+  try {
+    const eventId = req.params.id;
+
+    const [rows] = await db.query(
+      `SELECT r.id, u.first_name, u.last_name, u.email
+      FROM registrations r
+      JOIN users u ON r.user_id = u.id
+      WHERE r.event_id = ?`,
+      [eventId]
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Erreur récupération inscriptions :", error);
+    res.status(500).json({ message: "Erreur lors de la récupération des inscriptions" });
+  }
+}
+
+export async function getMyRegistrations(req, res) {
+  try {
+    const userId = req.user.id;
+
+    const [rows] = await db.query(
+      `SELECT 
+          r.id,
+          e.id AS event_id,
+          e.title,
+          e.start_date,
+          e.end_date
+       FROM registrations r
+       JOIN events e ON r.event_id = e.id
+       WHERE r.user_id = ?`,
+      [userId]
+    );
+
+    return res.json(rows);
+  } catch (error) {
+    console.error("Erreur récupération de mes inscriptions :", error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+}
