@@ -9,7 +9,8 @@ import {
   registerToEvent,
   unregisterFromEvent,
   getMyRegistrations,
-  getEventRegistrations
+  getEventRegistrations,
+  getAllEvents
 } from "../controllers/events.controller.js";
 
 const router = express.Router();
@@ -27,5 +28,5 @@ router.delete("/:id/register", verifyToken, unregisterFromEvent);
 router.get("/me/registrations", verifyToken, getMyRegistrations);
 
 router.get("/:id/registrations", verifyToken, isAdmin, getEventRegistrations);
-
+router.get("/admin/all", verifyToken, isAdmin, getAllEvents);
 export default router;

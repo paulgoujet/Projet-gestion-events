@@ -25,11 +25,16 @@ export async function registerToEvent(id, token) {
 }
 
 export async function unregisterFromEvent(id, token) {
-  const res = await axios.delete(`${API_URL}/events/${id}/register`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+
+  const res = await axios.delete(
+    `${API_URL}/events/${id}/register`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: {}
+    }
+  );
   return res.data;
 }
 
@@ -41,3 +46,5 @@ export async function getMyRegistrations(token) {
   });
   return res.data;
 }
+
+

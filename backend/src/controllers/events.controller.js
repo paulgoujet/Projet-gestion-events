@@ -260,3 +260,31 @@ export async function getMyRegistrations(req, res) {
     return res.status(500).json({ message: "Erreur serveur." });
   }
 }
+
+
+export const getAllEvents = async (req, res) => {
+  try {
+    const sql = `
+      SELECT 
+        e.id,
+        e.title,
+        e.description,
+        e.start_date,
+        e.end_date,
+        e.capacity,
+        e.status,
+        c.name AS category,
+        l.name AS location
+      FROM events e
+      LEFT JOIN categories c ON e.category_id = c.id
+      LEFT JOIN locations l ON e.location_id = l.id
+      ORDER BY e.start_date ASC
+    `;
+
+    const [rows] = await db.query(sql);
+    return res.json(rows);
+  } catch (error) {
+    console.error("Erreur récupération events admin :", error);
+    return res.status(500).json({ message: "Erreur serveur." });
+  }
+};
