@@ -1,21 +1,16 @@
 import express from "express";
-import {
-  getCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory
-} from "../controllers/categories.controller.js";
-
-import { verifyToken, isAdmin } from "../middlewares/auth.middleware.js";
+import { db } from "../config/db.js";
 
 const router = express.Router();
 
-// Public
-router.get("/", getCategories);
-
-// Admin
-router.post("/", verifyToken, isAdmin, createCategory);
-router.put("/:id", verifyToken, isAdmin, updateCategory);
-router.delete("/:id", verifyToken, isAdmin, deleteCategory);
+router.get("/", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM categories ORDER BY name ASC");
+    res.json(rows);
+  } catch (error) {
+    console.error("Erreur catégories :", error);
+    res.status(500).json({ message: "Erreur serveur." });
+  }
+});
 
 export default router;

@@ -3,16 +3,13 @@ import bcrypt from "bcryptjs";
 
 import jwt from "jsonwebtoken";
 
-// REGISTER
 export const register = async (req, res) => {
   try {
     const { first_name, last_name, email, password } = req.body;
 
-
     if (!first_name || !last_name || !email || !password) {
       return res.status(400).json({ message: "Tous les champs sont obligatoires." });
     }
-
 
     const [existing] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
 
@@ -20,16 +17,38 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "Cet email est déjà utilisé." });
     }
 
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
-
-    await db.query(
-      "INSERT INTO users (first_name, last_name, email, password_hash) VALUES (?, ?, ?, ?)",
+    const result = await db.query(
+      "INSERT INTO users (first_name, last_name, email, password_hash, role) VALUES (?, ?, ?, ?, 'USER')",
       [first_name, last_name, email, hashedPassword]
     );
 
-    return res.status(201).json({ message: "Utilisateur créé avec succès !" });
+    const newUserId = result[0].insertId;
+
+    const [rows] = await db.query(
+      "SELECT id, first_name, last_name, email, role FROM users WHERE id = ?",
+      [newUserId]
+    );
+    const user = rows[0];
+
+    const token = jwt.sign(
+      { id: newUserId, role: "USER" },  
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    return res.status(201).json({
+      message: "Utilisateur créé avec succès !",
+      user: {
+        id: newUserId,
+        first_name,
+        last_name,
+        email,
+        role: "USER"
+      },
+      token
+    });
 
   } catch (error) {
     console.error("Register error:", error);
@@ -38,7 +57,7 @@ export const register = async (req, res) => {
 };
 
 
-// LOGIN
+
 export const login = async (req, res) => {
   try {
     console.log("Données reçues depuis Thunder Client :", req.body);

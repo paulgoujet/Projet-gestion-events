@@ -1,19 +1,16 @@
 import express from "express";
-import {
-  getLocations,
-  createLocation,
-  updateLocation,
-  deleteLocation
-} from "../controllers/locations.controller.js";
-
-import { verifyToken, isAdmin } from "../middlewares/auth.middleware.js";
+import { db } from "../config/db.js";
 
 const router = express.Router();
 
-router.get("/", getLocations);
-
-router.post("/", verifyToken, isAdmin, createLocation);
-router.put("/:id", verifyToken, isAdmin, updateLocation);
-router.delete("/:id", verifyToken, isAdmin, deleteLocation);
+router.get("/", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM locations ORDER BY name ASC");
+    res.json(rows);
+  } catch (error) {
+    console.error("Erreur lieux :", error);
+    res.status(500).json({ message: "Erreur serveur." });
+  }
+});
 
 export default router;

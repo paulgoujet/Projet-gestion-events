@@ -14,8 +14,11 @@ function Navbar() {
       <ul className="navbar-links">
 
         <li><Link to="/">Événements</Link></li>
+        {user?.role === "ADMIN" && (
+          <li><Link to="/admin/events">Admin</Link></li>
+        )}
 
-        {/* Si NON connecté */}
+
         {!user && (
           <>
             <li><Link to="/login">Connexion</Link></li>
@@ -23,7 +26,6 @@ function Navbar() {
           </>
         )}
 
-        {/* Si connecté */}
         {user && (
           <>
             <li>
