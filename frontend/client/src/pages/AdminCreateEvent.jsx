@@ -16,6 +16,7 @@ function AdminCreateEvent() {
     capacity: "",
     category_id: "",
     location_id: "",
+    image_url: "",
     status: "PUBLISHED",
   });
 
@@ -74,6 +75,13 @@ function AdminCreateEvent() {
         <input type="datetime-local" name="end_date" value={form.end_date} onChange={handleChange} required />
 
         <input type="number" name="capacity" placeholder="Capacité" value={form.capacity} onChange={handleChange} min="1"/>
+
+        <input
+          name="image_url"
+          placeholder="Lien de l'image"
+          value={form.image_url}
+          onChange={handleChange}
+        />
 
         <select name="category_id" value={form.category_id} onChange={handleChange}>
           <option value="">Sélectionnez une catégorie</option>

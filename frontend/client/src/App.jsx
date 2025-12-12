@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-
+import ArtistsTicker from "./components/ArtistsTicker";
 import EventsList from "./pages/EventsList";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -14,6 +14,8 @@ function App() {
   return (
     <>
       <Navbar />
+      <ArtistsTicker />
+
 
       <div className="p-4">
         <Routes>

@@ -13,6 +13,7 @@ export const getAllPublishedEvents = async (req, res) => {
         e.status,
         c.name AS category,
         l.name AS location,
+        e.image_url,
         l.city AS city
       FROM events e
       LEFT JOIN categories c ON e.category_id = c.id
@@ -49,7 +50,8 @@ export const getEventById = async (req, res) => {
         l.name AS location,
         l.city AS city,
         u.first_name AS created_by_first_name,
-        u.last_name AS created_by_last_name
+        u.last_name AS created_by_last_name,
+        e.image_url
       FROM events e
       LEFT JOIN categories c ON e.category_id = c.id
       LEFT JOIN locations l ON e.location_id = l.id
@@ -74,7 +76,7 @@ export const getEventById = async (req, res) => {
 
 export const createEvent = async (req, res) => {
   try {
-    const { title, description, start_date, end_date, capacity, category_id, location_id, status } = req.body;
+    const { title, description, start_date, end_date, capacity, category_id, location_id, status, image_url } = req.body;
 
     if (!title || !start_date || !end_date) {
       return res.status(400).json({ message: "Titre, date de début et fin obligatoires." });
@@ -84,8 +86,8 @@ export const createEvent = async (req, res) => {
 
     const sql = `
       INSERT INTO events
-      (title, description, start_date, end_date, capacity, category_id, location_id, status, created_by)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (title, description, start_date, end_date, capacity, category_id, location_id, status, image_url, created_by)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     await db.query(sql, [
@@ -97,6 +99,7 @@ export const createEvent = async (req, res) => {
       category_id || null,
       location_id || null,
       status || "DRAFT",
+      image_url || null,
       created_by
     ]);
 
