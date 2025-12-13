@@ -2,10 +2,11 @@ import { useState } from "react";
 import { registerUser } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "./Register.css";
 
 function Register() {
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
   const [form, setForm] = useState({
     first_name: "",
@@ -26,9 +27,7 @@ function Register() {
 
     try {
       const data = await registerUser(form);
-
       login(data.user, data.token);
-
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription");
@@ -36,57 +35,52 @@ function Register() {
   }
 
   return (
-    <div>
-      <h2>Créer un compte</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="register-page">
+      <div className="register-form-container">
+        <h2>Créer un compte</h2>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "300px",
-          gap: "10px",
-        }}
-      >
-        <input
-          type="text"
-          name="first_name"
-          placeholder="Prénom"
-          value={form.first_name}
-          onChange={handleChange}
-          required
-        />
+        {error && <p className="register-error">{error}</p>}
 
-        <input
-          type="text"
-          name="last_name"
-          placeholder="Nom"
-          value={form.last_name}
-          onChange={handleChange}
-          required
-        />
+        <form className="register-form" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="first_name"
+            placeholder="Prénom"
+            value={form.first_name}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
+          <input
+            type="text"
+            name="last_name"
+            placeholder="Nom"
+            value={form.last_name}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Mot de passe"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
 
-        <button type="submit">S'inscrire</button>
-      </form>
+          <input
+            type="password"
+            name="password"
+            placeholder="Mot de passe"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+
+          <button type="submit">S'inscrire</button>
+        </form>
+      </div>
     </div>
   );
 }

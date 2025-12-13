@@ -3,14 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getEventById } from "../api/events";
 import { updateEventAdmin } from "../api/admin";
 import { useAuth } from "../context/AuthContext";
+import "./AdminEventEdit.css";
 
 function AdminEventEdit() {
   const { id } = useParams();
   const { token } = useAuth();
   const navigate = useNavigate();
 
-  const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const [form, setForm] = useState({
     title: "",
@@ -22,17 +23,24 @@ function AdminEventEdit() {
 
   useEffect(() => {
     async function fetchEvent() {
-      const data = await getEventById(id);
-      setEvent(data);
-      setForm({
-        title: data.title,
-        description: data.description,
-        start_date: data.start_date.slice(0, 16),
-        end_date: data.end_date.slice(0, 16),
-        capacity: data.capacity || "",
-      });
-      setLoading(false);
+      try {
+        const data = await getEventById(id);
+
+        setForm({
+          title: data.title || "",
+          description: data.description || "",
+          start_date: data.start_date?.slice(0, 16) || "",
+          end_date: data.end_date?.slice(0, 16) || "",
+          capacity: data.capacity || "",
+        });
+      } catch (err) {
+        console.error(err);
+        setError("Impossible de charger l’événement.");
+      } finally {
+        setLoading(false);
+      }
     }
+
     fetchEvent();
   }, [id]);
 
@@ -42,43 +50,78 @@ function AdminEventEdit() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
+
     try {
       await updateEventAdmin(id, form, token);
       alert("Événement mis à jour !");
       navigate("/admin/events");
-    } catch (error) {
-      alert("Erreur mise à jour");
+    } catch (err) {
+      console.error(err);
+      setError("Erreur lors de la mise à jour.");
     }
   }
 
   if (loading) return <p>Chargement...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div>
-      <h1>Modifier l’événement</h1>
+    <div className="admin-edit-page">
+      <div className="admin-edit-container">
+        <h1>Modifier l’événement</h1>
 
-      <form onSubmit={handleSubmit}>
-        <label>Titre :</label>
-        <input name="title" value={form.title} onChange={handleChange} required />
+        <form className="admin-form" onSubmit={handleSubmit}>
+          <label>Titre</label>
+          <input
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            required
+          />
 
-        <label>Description :</label>
-        <textarea name="description" value={form.description} onChange={handleChange} />
+          <label>Description</label>
+          <textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+          />
 
-        <label>Date début :</label>
-        <input type="datetime-local" name="start_date" value={form.start_date} onChange={handleChange} required />
+          <label>Date début</label>
+          <input
+            type="datetime-local"
+            name="start_date"
+            value={form.start_date}
+            onChange={handleChange}
+            required
+          />
 
-        <label>Date fin :</label>
-        <input type="datetime-local" name="end_date" value={form.end_date} onChange={handleChange} required />
+          <label>Date fin</label>
+          <input
+            type="datetime-local"
+            name="end_date"
+            value={form.end_date}
+            onChange={handleChange}
+            required
+          />
 
-        <label>Capacité :</label>
-        <input type="number" name="capacity" value={form.capacity} onChange={handleChange} />
+          <label>Capacité</label>
+          <input
+            type="number"
+            name="capacity"
+            value={form.capacity}
+            onChange={handleChange}
+            min="1"
+          />
 
-        <button style={{ marginTop: "12px" }} type="submit">
-          Enregistrer
-        </button>
-      </form>
+          <button className="admin-btn admin-btn-save" type="submit">
+            Enregistrer
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
 
 export default AdminEventEdit;
+
+

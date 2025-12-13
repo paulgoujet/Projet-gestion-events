@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "./EventDetails.css";
 import {
   getEventById,
   registerToEvent,
@@ -60,37 +61,56 @@ function EventDetails() {
     }
   }
 
-  return (
-    <div>
+return (
+  <div className="event-details-container">
+    <div className="event-details-card">
       <h1>{event.title}</h1>
-      <p><strong>Description:</strong> {event.description}</p>
+
+      <p>
+        <strong>Description :</strong> {event.description}
+      </p>
+
       <p>
         <strong>Date :</strong>{" "}
         {new Date(event.start_date).toLocaleString()} →{" "}
         {new Date(event.end_date).toLocaleString()}
       </p>
-      <p><strong>Catégorie :</strong> {event.category || "Aucune"}</p>
-      <p><strong>Lieu :</strong> {event.location || "Inconnu"}</p>
 
-      <br />
+      <p>
+        <strong>Catégorie :</strong> {event.category || "Aucune"}
+      </p>
+
+      <p>
+        <strong>Lieu :</strong> {event.location || "Inconnu"}
+      </p>
 
       {!user && (
-        <p style={{ color: "blue" }}>
+        <p className="login-required">
           Vous devez être connecté pour vous inscrire.
         </p>
       )}
 
       {user && (
-        <>
+        <div className="event-details-actions">
           {!isRegistered ? (
-            <button onClick={handleRegister}>S’inscrire</button>
+            <button
+              className="btn-register"
+              onClick={handleRegister}
+            >
+              S’inscrire
+            </button>
           ) : (
-            <button onClick={handleUnregister}>Se désinscrire</button>
+            <button
+              className="btn-unregister"
+              onClick={handleUnregister}
+            >
+              Se désinscrire
+            </button>
           )}
-        </>
+        </div>
       )}
     </div>
+  </div>
   );
 }
-
 export default EventDetails;

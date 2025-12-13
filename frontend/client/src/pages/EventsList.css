@@ -6,7 +6,6 @@
     margin-top: 40px;
   }
   
-  /* responsive */
   @media (max-width: 1200px) {
     .events-grid {
       grid-template-columns: repeat(2, 1fr);

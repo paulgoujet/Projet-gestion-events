@@ -1,0 +1,62 @@
+.my-events-container {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.my-events-list {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.my-event-card {
+  border: 1px solid #ccc;
+  padding: 16px 20px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.my-event-card button {
+  margin-top: 8px;
+}
+
+.button{
+    border-radius: 8px;
+}
+
+.my-events-actions {
+  margin-top: 12px;
+}
+
+.btn-view-event {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-view-event:hover {
+  background-color: #0056b3;
+}
+
+.btn-unregister {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.btn-unregister:hover {
+  background-color: #c82333;
+}

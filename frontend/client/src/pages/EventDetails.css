@@ -1,0 +1,58 @@
+.event-details-container {
+  padding: 20px;
+}
+
+.event-details-card {
+  max-width: 800px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.event-details-card h1 {
+  margin-bottom: 10px;
+}
+
+.event-details-card p {
+  margin-bottom: 10px;
+}
+
+.event-details-actions {
+  margin-top: 20px;
+}
+
+.btn-register {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.btn-register:hover {
+  background-color: #218838;
+}
+
+.btn-unregister {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.btn-unregister:hover {
+  background-color: #c82333;
+}
+
+.login-required {
+  color: #007bff;
+  margin-top: 10px;
+}

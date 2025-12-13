@@ -2,10 +2,11 @@ import { useState } from "react";
 import { loginUser } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
-  const { setUser, setToken } = useAuth();
+  const { login } = useAuth();
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -20,13 +21,7 @@ function Login() {
 
     try {
       const data = await loginUser(form);
-
-      setUser(data.user);
-      setToken(data.token);
-
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("token", data.token);
-
+      login(data.user, data.token);
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur de connexion.");
@@ -34,12 +29,12 @@ function Login() {
   }
 
   return (
-    <div>
-      <h2>Connexion</h2>
+    <div className="login-page">
+      <form className="login-form" onSubmit={handleSubmit}>
+        <h2>Connexion</h2>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="error-text">{error}</p>}
 
-      <form onSubmit={handleSubmit}>
         <input
           type="email"
           name="email"
@@ -58,7 +53,9 @@ function Login() {
           required
         />
 
-        <button type="submit">Se connecter</button>
+        <button type="submit" className="btn-primary">
+          Se connecter
+        </button>
       </form>
     </div>
   );
